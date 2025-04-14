@@ -22,7 +22,7 @@ Each task folder includes:
 
   pip install -r requirements.txt
 
-4.avigate to the subfolder containing app.py:
+4.Navigate to the subfolder containing app.py:
    cd to subfolder containing app.py
    
 5.Run the project using Streamlit:
