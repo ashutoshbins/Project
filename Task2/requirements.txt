@@ -1,0 +1,6 @@
+streamlit
+tweepy
+pandas
+matplotlib
+vaderSentiment
+#BEARER_TOKEN = "AAAAAAAAAAAAAAAAAAAAAGpt0gEAAAAAGHWaKNLUa1CAmtxVSwwp2QgTGBs%3DmXoyMehwZkOOkIDWuvubftfelQpN1hDnUhazQM9pxLPquhDUg5"

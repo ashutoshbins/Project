@@ -1,0 +1,15 @@
+streamlit
+pandas
+yfinance
+duckduckgo-search
+phidata
+plotly
+matplotlib
+requests
+python-dotenv
+fastapi
+uvicorn
+groq
+openai
+python-multipart
+packaging

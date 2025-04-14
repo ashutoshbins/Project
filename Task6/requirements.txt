@@ -1,0 +1,9 @@
+pandas
+numpy
+scikit-learn
+matplotlib
+yfinance
+streamlit
+joblib
+ta  # Technical analysis library
+plotly

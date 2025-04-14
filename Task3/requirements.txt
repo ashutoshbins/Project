@@ -1,0 +1,8 @@
+twelvedata
+yfinance
+pandas
+plotly
+streamlit
+phi
+requests
+matplotlib
