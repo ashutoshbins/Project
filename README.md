@@ -15,9 +15,16 @@ Each task folder includes:
    ```bash
    git clone https://github.com/ashutoshbins/Project.git
 2.Navigate to the folder of the task you want to run (e.g., task1):
-   cd task1
+
+   cd to given task 
+
 3.Install the required dependencies using pip:
+
   pip install -r requirements.txt
-4.Run the project using Streamlit:
+
+4.avigate to the subfolder containing app.py:
+   cd to subfolder containing app.py
+   
+5.Run the project using Streamlit:
   streamlit run app.py
 
