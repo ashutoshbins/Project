@@ -20,9 +20,9 @@ def scrape_investing_tech_news():
     dates = []
 
     articles = driver.find_elements(By.CSS_SELECTOR, 'a[data-test="article-title-link"]')
-    for article in articles:
+    for article in articles[:20]:
         headline = article.text.strip()
-        link = article.get_attribute("href")  # ✅ fixed here
+        link = article.get_attribute("href")
         if headline and link:
             headlines.append(headline)
             links.append(link)
@@ -39,7 +39,6 @@ def scrape_investing_tech_news():
         "Date": dates
     })
 
-
 def scrape_cnbc():
     try:
         url = "https://www.cnbc.com/technology/"
@@ -51,7 +50,7 @@ def scrape_cnbc():
         dates = []
 
         articles = driver.find_elements(By.CSS_SELECTOR, 'a.Card-title')
-        for article in articles:
+        for article in articles[:20]:
             headline = article.text.strip()
             link = article.get_attribute('href')
             if headline and link:
@@ -73,12 +72,39 @@ def scrape_cnbc():
         print(f"❌ CNBC scraping failed: {e}")
         return pd.DataFrame()
 
+def scrape_moneycontrol():
+    url = "https://www.moneycontrol.com/news/business/stocks/"
+    driver.get(url)
+    time.sleep(5)
+
+    headlines = []
+    links = []
+
+    articles = driver.find_elements(By.CSS_SELECTOR, 'a[title][href*="/news/"]')
+
+    for article in articles[:20]:
+        headline = article.get_attribute("title")
+        link = article.get_attribute("href")
+
+        if headline and link and "moneycontrol.com" in link:
+            headlines.append(headline.strip())
+            links.append(link.strip())
+
+    return pd.DataFrame({
+        "Website": ["Moneycontrol"] * len(headlines),
+        "Headline": headlines,
+        "Link": links,
+        "Date": [datetime.now().strftime("%Y-%m-%d")] * len(headlines)
+    })
+
 def run_scrapers(selected_sources):
     dfs = []
     if "Investing.com" in selected_sources:
         dfs.append(scrape_investing_tech_news())
     if "CNBC" in selected_sources:
         dfs.append(scrape_cnbc())
+    if "Moneycontrol" in selected_sources:
+        dfs.append(scrape_moneycontrol())
 
     if dfs:
         final_df = pd.concat(dfs, ignore_index=True)
@@ -91,5 +117,5 @@ def run_scrapers(selected_sources):
         return pd.DataFrame()
 
 if __name__ == "__main__":
-    run_scrapers(["Investing.com", "CNBC"])
+    run_scrapers(["Investing.com", "CNBC", "Moneycontrol"])
     driver.quit()
