@@ -3,29 +3,39 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-token = os.getenv("HUGGINGFACE_TOKEN")
 
-#API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-API_URL = "https://api-inference.huggingface.co/models/t5-small"
-headers = {"Authorization": f"Bearer {token}"}
+API_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
+API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+HEADERS = {"Authorization": f"Bearer {API_TOKEN}"}
 
-def summarize_with_api(text, retries=3):
-    payload = {
-        "inputs": text,
-        "parameters": {
-            "min_length": 30,
-            "max_length": 120,
-            "do_sample": False
-        }
-    }
-    
-
-    for i in range(retries):
-        try:
-            response = requests.post(API_URL, headers=headers, json=payload, timeout=20)
-            response.raise_for_status()
+def summarize_text(text, max_chunk=1000):
+    def query(payload):
+        response = requests.post(API_URL, headers=HEADERS, json=payload)
+        if response.status_code == 200:
             return response.json()[0]['summary_text']
-        except Exception as e:
-            if i < retries - 1:
-                continue
-            return f"❌ Summarization failed: {e}"
+        else:
+            raise Exception(f"Hugging Face API Error: {response.status_code} - {response.text}")
+
+    text = ' '.join(text.strip().split())
+    summaries = []
+
+    while len(text) > max_chunk:
+        split_at = text[:max_chunk].rfind('. ')
+        if split_at == -1:
+            split_at = max_chunk
+        chunk = text[:split_at+1]
+        summaries.append(query({"inputs": chunk}))
+        text = text[split_at+1:]
+
+    if text:
+        summaries.append(query({"inputs": text}))
+
+    return " ".join(summaries)
+if __name__ == "__main__":
+    input_text = """Hugging Face is creating a tool that democratizes AI, 
+    enabling people to access powerful NLP models easily. With their 
+    Transformers library and model hub, they allow both researchers and 
+    developers to share and use pre-trained models."""
+    
+    summary = summarize_text(input_text, max_chunk=1000)
+    print("📄 Summary:", summary)
