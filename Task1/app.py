@@ -1,7 +1,7 @@
 import streamlit as st
 from scraper import get_moneycontrol_links, get_ettech_links
 from article_extractor import extract_article_content
-from summarizer import summarize_with_api
+from summarizer import summarize_text  # Assuming summarize_text is your summarization function
 
 st.set_page_config(page_title="📰 IT & Tech Deal News", layout="wide")
 
@@ -11,6 +11,7 @@ st.write("Scraping latest headlines and summarizing deals in Indian tech.")
 with st.spinner("Fetching news..."):
     all_links = get_moneycontrol_links() + get_ettech_links()
 
+# Loop through all links and display the content
 for item in all_links:
     st.subheader(item['text'])
     st.caption(item['url'])
@@ -24,7 +25,7 @@ for item in all_links:
         st.write(f"Content for {item['text']} : {content[:500]}")  # Display the first 500 characters of content
         
         # Summarize the article
-        summary = summarize_with_api(content)
+        summary = summarize_text(content)
         
         # Show summary if successful
         if summary:
