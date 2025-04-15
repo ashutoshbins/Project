@@ -1,5 +1,6 @@
 from newspaper import Article
 import requests
+
 def extract_article_content(url):
     try:
         response = requests.get(url)
